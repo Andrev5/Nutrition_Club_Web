@@ -1,0 +1,5 @@
+Nutrition Club - demo web
+Abre index.html en el navegador. Archivos: index.html, style.css, script.js, assets/.
+Tipografías (Outfit, Figtree) se cargan desde Google Fonts, requiere internet.
+Para cambiar datos, edita el texto dentro de index.html.
+Made by Merla Analytics.
