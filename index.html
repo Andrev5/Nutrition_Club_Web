@@ -19,7 +19,7 @@
       <a href="#nosotros">Nosotros</a>
       <a href="#contenido">Contenido</a>
       <a href="#contacto">Contacto</a>
-      <a class="btn" href="https://wa.me/50259518804" target="_blank" rel="noopener">Agenda tu cita</a>
+      <a class="btn" href="#agendar">Agenda tu cita</a>
     </nav>
   </div>
 </header>
@@ -32,7 +32,7 @@
       <h1>Mejora tu Salud, Supera tus Metas</h1>
       <p class="lead">Somos una clínica especializada en nutrición clínica y deportiva. Planes totalmente adaptados a cada persona, con estrategias basadas en evidencia.</p>
       <div class="actions">
-        <a class="btn" href="https://wa.me/50259518804" target="_blank" rel="noopener">Agenda tu cita</a>
+        <a class="btn" href="#agendar">Agenda tu cita</a>
         <a class="btn ghost" href="#servicios">Ver servicios</a>
       </div>
     </div>
@@ -99,11 +99,57 @@
       <p>Un recorrido simple, de la primera conversación al seguimiento.</p>
     </div>
     <ol class="steps">
-      <li><h3>Escríbenos</h3><p>Agenda por WhatsApp y cuéntanos tu objetivo.</p></li>
+      <li><h3>Escríbenos</h3><p>Reserva tu cita en línea o por WhatsApp y cuéntanos tu objetivo.</p></li>
       <li><h3>Evaluación</h3><p>Medimos tu punto de partida con evaluaciones y pruebas.</p></li>
       <li><h3>Tu plan</h3><p>Recibes un plan adaptado a tu rutina y tu meta.</p></li>
       <li><h3>Seguimiento</h3><p>Ajustamos contigo para que los hábitos duren.</p></li>
     </ol>
+  </div>
+</section>
+
+<section id="agendar" class="book">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Agenda en línea</span>
+      <h2>Reserva tu cita</h2>
+      <p>Escribe tus datos y elige el día y la hora que mejor te quede. Las citas son de 30 minutos.</p>
+    </div>
+    <div class="bookcard">
+      <form id="bookform" novalidate>
+        <div class="cols" id="cols">
+          <fieldset class="grp">
+            <legend>Tus datos</legend>
+            <div class="field"><label for="f-name">Nombre completo</label><input id="f-name" name="name" type="text" autocomplete="name" placeholder="Ej. María López"><div class="msg" id="e-name" role="alert"></div></div>
+            <div class="field"><label for="f-email">Correo electrónico</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="tucorreo@ejemplo.com"><div class="msg" id="e-email" role="alert"></div></div>
+            <div class="field"><label for="f-phone">Número de teléfono</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej. 5555-1234"><div class="msg" id="e-phone" role="alert"></div></div>
+          </fieldset>
+          <fieldset class="grp" id="schedule">
+            <legend>Fecha y hora</legend>
+            <div class="cal">
+              <div class="calhead">
+                <button class="nav" type="button" id="prev" aria-label="Mes anterior">&#8249;</button>
+                <strong id="monthlabel" aria-live="polite"></strong>
+                <button class="nav" type="button" id="next" aria-label="Mes siguiente">&#8250;</button>
+              </div>
+              <div class="dow" aria-hidden="true"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+              <div class="days" id="days"></div>
+            </div>
+            <div class="slotsbox">
+              <h4 id="slotstitle">Elige un día para ver los horarios</h4>
+              <div class="slots" id="slots" role="group" aria-labelledby="slotstitle"></div>
+              <p class="hint" id="slothint">Solo puedes elegir fechas desde hoy en adelante.</p>
+            </div>
+          </fieldset>
+        </div>
+        <div class="hp" aria-hidden="true"><label>No llenar este campo<input id="f-web" name="web" tabindex="-1" autocomplete="off"></label></div>
+        <div class="formerr" id="formerr" role="alert"></div>
+        <div class="submitrow">
+          <button class="btn" type="submit" id="submitbtn">Reservar cita</button>
+          <small>Usaremos tus datos solo para coordinar tu cita. La clínica confirma la disponibilidad contigo.</small>
+        </div>
+      </form>
+      <div class="done" id="done" hidden></div>
+    </div>
   </div>
 </section>
 
@@ -127,7 +173,7 @@
   <div class="wrap">
     <div class="head">
       <span class="eyebrow">Contacto</span>
-      <h2>Agenda tu cita</h2>
+      <h2>Escríbenos o visítanos</h2>
       <p>Escríbenos por WhatsApp y te respondemos para coordinar tu consulta.</p>
     </div>
     <div class="grid">
@@ -162,11 +208,15 @@
 <footer>
   <div class="wrap">
     <div class="by"><span>Made by</span><img src="assets/merla-analytics.png" alt="Merla Analytics"></div>
+    <a class="adminlink" href="admin.html">Acceso clínica</a>
     <small>Demo de diseño preparada para Nutrition Club. Logo y contenido pertenecen a sus propietarios.</small>
   </div>
 </footer>
 
+<script src="config.js"></script>
+<script src="store.js"></script>
 <script src="script.js"></script>
+<script src="book.js"></script>
 
 </body>
 </html>
