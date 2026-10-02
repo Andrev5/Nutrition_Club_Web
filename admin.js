@@ -51,7 +51,13 @@
   function load(){
     S.list(token).then(function(rows){
       all=rows||[];$('login').hidden=true;$('panel').hidden=false;$('logout').hidden=false;
-      if(!st.y){var t=parts(todayGT());st.y=t.y;st.m=t.m;st.sel=todayGT()}
+      if(!st.y){
+        /* abre en el día de hoy; si hoy no hay citas, en la próxima cita */
+        var td=todayGT(),next=null;
+        all.forEach(function(r){if(isActive(r)&&r.fecha>=td&&(!next||r.fecha<next))next=r.fecha});
+        var sel=byDay()[td]&&byDay()[td].some(isActive)?td:(next||td),t=parts(sel);
+        st.y=t.y;st.m=t.m;st.sel=sel;
+      }
       render();
     }).catch(function(ex){
       if(ex&&ex.message==='auth'){token='';try{sessionStorage.removeItem('nc_tok')}catch(e){}showLogin('')}

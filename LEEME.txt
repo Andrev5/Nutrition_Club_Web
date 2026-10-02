@@ -29,7 +29,8 @@ NOTAS
   - Horarios de config.js son de ejemplo (lunes a viernes, 8:00-12:00 y 13:00-17:00). Ajústalos.
   - admin.html no está enlazado en el menú, pero sí en el pie de página como "Acceso clínica".
     La protección real es el usuario y contraseña que valida el servidor, no la página.
-  - Modo demo (sin sheetUrl): el acceso de prueba es usuario Admin y contraseña demo. La contraseña real nunca va en estos archivos.
+  - Modo demo (sin sheetUrl): entra con Admin / administrador2026. Esa clave queda visible en store.js, así que al conectar
+    Google Sheets usa una contraseña distinta y más larga en ADMIN_PASS (esa sí es privada).
   - Tras 5 intentos fallidos el acceso se bloquea 15 minutos. La sesión dura 6 horas.
   - Mapa: index.html incluye un mapa de Google por dirección. Si el pin no queda exacto, abre el lugar en Google Maps >
     Compartir > Insertar un mapa, copia el src del iframe y reemplázalo en index.html.

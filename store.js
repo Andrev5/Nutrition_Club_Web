@@ -24,7 +24,8 @@
     /* Inicio de sesión: con Google Sheets lo valida el servidor (la contraseña nunca está en estos archivos). En modo demo se usa un acceso de prueba. */
     login:function(user,pass){
       if(S.mode==='sheet')return post({action:'login',user:user,pass:pass}).then(function(r){if(!r.ok)throw new Error(r.error||'error');return r.token});
-      return new Promise(function(res,rej){if(String(user).toLowerCase()==='admin'&&pass==='demo')res('demo');else rej(new Error('auth'))});
+      /* Acceso de prueba (solo modo demo, sin servidor). Es visible en el código: no reutilices esta contraseña en el servidor real. */
+      return new Promise(function(res,rej){if(String(user).trim().toLowerCase()==='admin'&&pass==='administrador2026')res('demo');else rej(new Error('auth'))});
     },
     list:function(token){
       if(S.mode==='sheet')return post({action:'list',token:token}).then(function(j){if(!j.ok)throw new Error(j.error||'error');return j.records});
