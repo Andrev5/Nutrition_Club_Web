@@ -122,6 +122,15 @@
             <div class="field"><label for="f-name">Nombre completo</label><input id="f-name" name="name" type="text" autocomplete="name" placeholder="Ej. María López"><div class="msg" id="e-name" role="alert"></div></div>
             <div class="field"><label for="f-email">Correo electrónico</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="tucorreo@ejemplo.com"><div class="msg" id="e-email" role="alert"></div></div>
             <div class="field"><label for="f-phone">Número de teléfono</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej. 5555-1234"><div class="msg" id="e-phone" role="alert"></div></div>
+            <fieldset class="mode inl">
+              <legend>Modalidad de la cita</legend>
+              <div class="opts">
+                <input type="radio" name="modalidad" id="mo-p" value="presencial" checked><label for="mo-p">Presencial</label>
+                <input type="radio" name="modalidad" id="mo-v" value="virtual"><label for="mo-v">Virtual</label>
+              </div>
+              <p class="hint" id="mo-hint">En la clínica, CC Zona Portales, nivel 3, local 6.</p>
+            </fieldset>
+            <div class="field"><label for="f-note">Comentarios <span class="opt">(opcional)</span></label><textarea id="f-note" name="note" rows="4" maxlength="500" placeholder="Cuéntanos tu objetivo o algo que debamos saber"></textarea><div class="count" id="note-count" aria-live="off">0 / 500</div></div>
           </fieldset>
           <fieldset class="grp" id="schedule">
             <legend>Fecha y hora</legend>

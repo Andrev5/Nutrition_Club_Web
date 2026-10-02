@@ -13,7 +13,7 @@
       return new Promise(function(res,rej){
         var a=lsGet();
         if(rec.tipo==='cita'&&a.some(function(x){return x.tipo==='cita'&&x.estado!=='cancelada'&&x.fecha===rec.fecha&&x.hora===rec.hora}))return rej(new Error('taken'));
-        var r={id:uid(),creado:new Date().toISOString(),tipo:rec.tipo,nombre:rec.nombre,correo:rec.correo,telefono:rec.telefono,fecha:rec.fecha||'',hora:rec.hora||'',estado:'nuevo'};
+        var r={id:uid(),creado:new Date().toISOString(),tipo:rec.tipo,nombre:rec.nombre,correo:rec.correo,telefono:rec.telefono,fecha:rec.fecha||'',hora:rec.hora||'',modalidad:rec.modalidad||'presencial',comentarios:rec.comentarios||'',estado:'nuevo'};
         a.unshift(r);lsSet(a);res(r.id);
       });
     },

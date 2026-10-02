@@ -11,7 +11,7 @@ var ADMIN_KEY='CAMBIA-ESTA-CLAVE';   // la clave que usará la clínica en admin
 var NOTIFY_EMAIL='';                 // opcional: correo que recibe un aviso por cada solicitud
 var TZ='America/Guatemala';
 var SHEET_NAME='Registros';
-var HEAD=['id','creado','tipo','nombre','correo','telefono','fecha','hora','estado'];
+var HEAD=['id','creado','tipo','nombre','correo','telefono','fecha','hora','estado','modalidad','comentarios'];
 var ESTADOS=['nuevo','contactado','confirmada','cancelada'];
 
 function sh_(){
@@ -53,7 +53,7 @@ function doPost(e){
 
 function create_(r){
   if(r.web)return out_({ok:true});   // trampa para bots
-  var rec={tipo:r.tipo==='cita'?'cita':'datos',nombre:clean_(r.nombre,120),correo:clean_(r.correo,120),telefono:clean_(r.telefono,30),fecha:'',hora:''};
+  var rec={tipo:r.tipo==='cita'?'cita':'datos',nombre:clean_(r.nombre,120),correo:clean_(r.correo,120),telefono:clean_(r.telefono,30),fecha:'',hora:'',modalidad:r.modalidad==='virtual'?'virtual':'presencial',comentarios:clean_(r.comentarios,500)};
   if(rec.nombre.length<2||!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(rec.correo)||rec.telefono.replace(/\D/g,'').length<8)return out_({ok:false,error:'invalid'});
   if(rec.tipo==='cita'){
     if(!/^\d{4}-\d{2}-\d{2}$/.test(String(r.fecha))||!/^\d{2}:\d{2}$/.test(String(r.hora)))return out_({ok:false,error:'invalid'});
@@ -63,12 +63,12 @@ function create_(r){
     rec.fecha=r.fecha;rec.hora=r.hora;
   }
   var id=Utilities.getUuid().slice(0,8);
-  var row=[id,new Date().toISOString(),rec.tipo,rec.nombre,rec.correo,rec.telefono,rec.fecha,rec.hora,'nuevo'];
+  var row=[id,new Date().toISOString(),rec.tipo,rec.nombre,rec.correo,rec.telefono,rec.fecha,rec.hora,'nuevo',rec.modalidad,rec.comentarios];
   var sh=sh_(),n=sh.getLastRow()+1;
   sh.getRange(n,1,1,HEAD.length).setNumberFormat('@').setValues([row]);  // texto plano: evita fórmulas
   if(NOTIFY_EMAIL){
     try{MailApp.sendEmail(NOTIFY_EMAIL,'Nueva solicitud: '+rec.nombre,
-      (rec.tipo==='cita'?'Cita: '+rec.fecha+' '+rec.hora+'\n':'Solo dejó sus datos\n')+'Nombre: '+rec.nombre+'\nCorreo: '+rec.correo+'\nTeléfono: '+rec.telefono)}catch(x){}
+      (rec.tipo==='cita'?'Cita: '+rec.fecha+' '+rec.hora+'\n':'Solo dejó sus datos\n')+'Modalidad: '+rec.modalidad+'\nNombre: '+rec.nombre+'\nCorreo: '+rec.correo+'\nTeléfono: '+rec.telefono+(rec.comentarios?'\nComentarios: '+rec.comentarios:''))}catch(x){}
   }
   return out_({ok:true,id:id});
 }

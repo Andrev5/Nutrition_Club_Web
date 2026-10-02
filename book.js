@@ -86,7 +86,10 @@
     
     $('formerr').textContent='';
   }
-  form.addEventListener('change',function(e){if(e.target.name==='mode')setMode(e.target.value)});
+  form.addEventListener('change',function(e){
+    if(e.target.name==='modalidad')$('mo-hint').textContent=(e.target.value==='virtual')?'Por videollamada. La clínica te enviará los detalles de conexión.':'En la clínica, CC Zona Portales, nivel 3, local 6.';
+  });
+  $('f-note').addEventListener('input',function(){$('note-count').textContent=this.value.length+' / 500'});
 
   function setErr(id,msg){
     var inp=$('f-'+id);$('e-'+id).textContent=msg||'';
@@ -107,14 +110,16 @@
     var lines=[];
     if(data.when){lines.push('Hola, soy '+data.name+'. Quiero agendar una cita en Nutrition Club.','Fecha: '+data.when.date,'Hora: '+data.when.time)}
     else lines.push('Hola, soy '+data.name+'. Les dejo mis datos para que me contacten de Nutrition Club.');
-    lines.push('Correo: '+data.email,'Teléfono: '+data.phone);
+    lines.push('Modalidad: '+data.modalidad,'Correo: '+data.email,'Teléfono: '+data.phone);
+    if(data.note)lines.push('Comentarios: '+data.note);
     return lines.join('\n');
   }
   function showDone(data,sent){
     var link='https://wa.me/'+CONFIG.whatsapp+'?text='+encodeURIComponent(build(data));
     var rows='<div><dt>Nombre</dt><dd>'+esc(data.name)+'</dd></div>'+
       (data.when?'<div><dt>Fecha</dt><dd>'+esc(data.when.date)+'</dd></div><div><dt>Hora</dt><dd>'+esc(data.when.time)+'</dd></div>':'')+
-      '<div><dt>Correo</dt><dd>'+esc(data.email)+'</dd></div><div><dt>Teléfono</dt><dd>'+esc(data.phone)+'</dd></div>';
+      '<div><dt>Modalidad</dt><dd>'+esc(data.modalidad)+'</dd></div><div><dt>Correo</dt><dd>'+esc(data.email)+'</dd></div><div><dt>Teléfono</dt><dd>'+esc(data.phone)+'</dd></div>'+
+      (data.note?'<div><dt>Comentarios</dt><dd>'+esc(data.note)+'</dd></div>':'');
     var intro=sent?'Recibimos tus datos. La clínica te escribirá para confirmar'+(data.when?' tu cita':'')+'.'
       :'Tu solicitud quedó guardada en este navegador (modo demo). Para que la clínica la reciba, envíala también por WhatsApp.';
     doneEl.innerHTML='<h3>'+(sent?'Solicitud enviada':'Casi listo')+'</h3><p>'+intro+'</p><dl class="sum">'+rows+'</dl>'+
@@ -122,7 +127,7 @@
       '<button type="button" class="btn ghost" id="again">Hacer otra solicitud</button></div>';
     form.hidden=true;doneEl.hidden=false;
     $('again').addEventListener('click',function(){
-      doneEl.hidden=true;form.hidden=false;form.reset();state.date=null;state.time=null;setMode('cita');renderCal();renderSlots();
+      doneEl.hidden=true;form.hidden=false;form.reset();$('note-count').textContent='0 / 500';$('mo-hint').textContent='En la clínica, CC Zona Portales, nivel 3, local 6.';state.date=null;state.time=null;setMode('cita');renderCal();renderSlots();
     });
     doneEl.scrollIntoView({behavior:'smooth',block:'center'});
   }
@@ -139,8 +144,8 @@
     var ok=validate(),err=$('formerr');err.textContent='';
     if(state.mode==='cita'&&(!state.date||!state.time)){err.textContent=!state.date?'Elige un día en el calendario.':'Elige una hora disponible.';ok=false}
     if(!ok){if(!err.textContent)err.textContent='Revisa los campos marcados.';return}
-    var data={name:$('f-name').value.trim(),email:$('f-email').value.trim(),phone:$('f-phone').value.trim(),when:null};
-    var rec={tipo:state.mode,nombre:data.name,correo:data.email,telefono:data.phone,fecha:'',hora:'',web:$('f-web').value};
+    var data={name:$('f-name').value.trim(),email:$('f-email').value.trim(),phone:$('f-phone').value.trim(),when:null,modalidad:form.elements.modalidad.value==='virtual'?'Virtual':'Presencial',note:$('f-note').value.trim()};
+    var rec={tipo:state.mode,nombre:data.name,correo:data.email,telefono:data.phone,modalidad:data.modalidad.toLowerCase(),comentarios:data.note,fecha:'',hora:'',web:$('f-web').value};
     if(state.mode==='cita'){
       var a=state.date.split('-'),t=toMin(state.time);
       var ld=longDate(+a[0],+a[1]-1,+a[2]);data.when={date:ld.charAt(0).toUpperCase()+ld.slice(1),time:fmt(t)};rec.fecha=state.date;rec.hora=state.time;

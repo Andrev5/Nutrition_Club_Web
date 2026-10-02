@@ -23,6 +23,7 @@ PARA RECIBIR REGISTROS REALES (Google Sheets, gratis)
      - admin.html pide la clave y muestra todos los registros, con filtros y estado.
 
 NOTAS
+  - Si ya habías creado la hoja con una versión anterior, borra la pestaña "Registros" para que se cree con las columnas nuevas (modalidad y comentarios).
   - Horarios de config.js son de ejemplo (lunes a viernes, 8:00-12:00 y 13:00-17:00). Ajústalos.
   - admin.html no está enlazado en el menú, pero sí en el pie de página como "Acceso clínica".
     La protección real es la clave en el servidor, no la página.
