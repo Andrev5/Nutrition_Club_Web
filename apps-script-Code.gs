@@ -1,13 +1,14 @@
 /**
  * Nutrition Club - registro de citas en Google Sheets.
  * 1) Crea una hoja de cálculo de Google nueva.
- * 2) Extensiones > Apps Script, pega este código y cambia ADMIN_KEY.
+ * 2) Extensiones > Apps Script, pega este código y escribe en ADMIN_PASS la contraseña de administración.
  * 3) Implementar > Nueva implementación > Aplicación web.
  *    Ejecutar como: Yo. Quién tiene acceso: Cualquier persona.
  * 4) Copia la URL que termina en /exec y pégala en config.js (sheetUrl).
  * Cada vez que cambies este código: Implementar > Administrar implementaciones > Editar > Nueva versión.
  */
-var ADMIN_KEY='CAMBIA-ESTA-CLAVE';   // la clave que usará la clínica en admin.html
+var ADMIN_USER='Admin';
+var ADMIN_PASS='CAMBIA-ESTA-CONTRASEÑA'; // escribe la contraseña real SOLO aquí, dentro del editor de Apps Script. No la pegues en archivos que subas a GitHub.
 var NOTIFY_EMAIL='';                 // opcional: correo que recibe un aviso por cada solicitud
 var TZ='America/Guatemala';
 var SHEET_NAME='Registros';
@@ -33,10 +34,6 @@ function doGet(e){
   if(p.action==='taken'){
     return out_({ok:true,taken:rows_().filter(function(r){return r.tipo==='cita'&&r.estado!=='cancelada'&&r.fecha}).map(function(r){return r.fecha+' '+r.hora})});
   }
-  if(p.action==='list'){
-    if(p.key!==ADMIN_KEY)return out_({ok:false,error:'auth'});
-    return out_({ok:true,records:rows_().reverse()});
-  }
   return out_({ok:true});
 }
 
@@ -45,6 +42,8 @@ function doPost(e){
   try{
     var d=JSON.parse(e.postData.contents);
     if(d.action==='create')return create_(d.rec||{});
+    if(d.action==='login')return login_(d);
+    if(d.action==='list'){if(!authed_(d.token))return out_({ok:false,error:'auth'});return out_({ok:true,records:rows_().reverse()})}
     if(d.action==='status')return status_(d);
     return out_({ok:false,error:'bad'});
   }catch(err){return out_({ok:false,error:'server'})}
@@ -73,8 +72,23 @@ function create_(r){
   return out_({ok:true,id:id});
 }
 
+function login_(d){
+  if(String(ADMIN_PASS).indexOf('CAMBIA')===0)return out_({ok:false,error:'config'});
+  var cache=CacheService.getScriptCache(),fails=+(cache.get('fails')||0);
+  if(fails>=5)return out_({ok:false,error:'locked'});          // 5 intentos fallidos = espera de 15 minutos
+  if(String(d.user||'').toLowerCase()===String(ADMIN_USER).toLowerCase()&&String(d.pass||'')===String(ADMIN_PASS)){
+    var tok=Utilities.getUuid()+Utilities.getUuid();
+    cache.put('t_'+tok,'1',21600);                                // sesión de 6 horas
+    cache.remove('fails');
+    return out_({ok:true,token:tok});
+  }
+  cache.put('fails',String(fails+1),900);
+  return out_({ok:false,error:'auth'});
+}
+function authed_(t){return !!t&&CacheService.getScriptCache().get('t_'+t)==='1'}
+
 function status_(d){
-  if(d.key!==ADMIN_KEY)return out_({ok:false,error:'auth'});
+  if(!authed_(d.token))return out_({ok:false,error:'auth'});
   if(ESTADOS.indexOf(d.estado)<0)return out_({ok:false,error:'invalid'});
   var sh=sh_(),n=sh.getLastRow();if(n<2)return out_({ok:false,error:'notfound'});
   var ids=sh.getRange(2,1,n-1,1).getValues();

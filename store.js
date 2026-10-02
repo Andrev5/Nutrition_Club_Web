@@ -21,12 +21,17 @@
       if(S.mode==='sheet')return fetch(C.sheetUrl+'?action=taken').then(json).then(function(j){return j.taken||[]});
       return Promise.resolve(lsGet().filter(function(x){return x.tipo==='cita'&&x.estado!=='cancelada'&&x.fecha}).map(function(x){return x.fecha+' '+x.hora}));
     },
-    list:function(key){
-      if(S.mode==='sheet')return fetch(C.sheetUrl+'?action=list&key='+encodeURIComponent(key)).then(json).then(function(j){if(!j.ok)throw new Error(j.error||'error');return j.records});
+    /* Inicio de sesión: con Google Sheets lo valida el servidor (la contraseña nunca está en estos archivos). En modo demo se usa un acceso de prueba. */
+    login:function(user,pass){
+      if(S.mode==='sheet')return post({action:'login',user:user,pass:pass}).then(function(r){if(!r.ok)throw new Error(r.error||'error');return r.token});
+      return new Promise(function(res,rej){if(String(user).toLowerCase()==='admin'&&pass==='demo')res('demo');else rej(new Error('auth'))});
+    },
+    list:function(token){
+      if(S.mode==='sheet')return post({action:'list',token:token}).then(function(j){if(!j.ok)throw new Error(j.error||'error');return j.records});
       return Promise.resolve(lsGet());
     },
-    setStatus:function(id,estado,key){
-      if(S.mode==='sheet')return post({action:'status',key:key,id:id,estado:estado}).then(function(r){if(!r.ok)throw new Error(r.error||'error')});
+    setStatus:function(id,estado,token){
+      if(S.mode==='sheet')return post({action:'status',token:token,id:id,estado:estado}).then(function(r){if(!r.ok)throw new Error(r.error||'error')});
       var a=lsGet();a.forEach(function(x){if(x.id===id)x.estado=estado});lsSet(a);return Promise.resolve();
     },
     clearDemo:function(){lsSet([])}

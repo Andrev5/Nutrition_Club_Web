@@ -14,21 +14,50 @@
 <section class="adm" id="admin">
   <div class="wrap">
     <div class="admhead">
-      <div><span class="eyebrow">Administración</span><h2>Registros</h2></div>
-      <a class="btn ghost" id="backlink" href="index.html">Volver al sitio</a>
+      <div><span class="eyebrow">Administración</span><h2>Panel de citas</h2></div>
+      <div class="admactions">
+        <button class="btn ghost sm" type="button" id="logout" hidden>Cerrar sesión</button>
+        <a class="btn ghost" id="backlink" href="index.html">Volver al sitio</a>
+      </div>
     </div>
-    <p class="demonote" id="demonote" hidden>Modo demo: aquí ves solo los registros hechos en este navegador. Al conectar Google Sheets (ver LEEME) verás los de todos los pacientes.</p>
+    <p class="demonote" id="demonote" hidden>Modo demo: entra con usuario <b>Admin</b> y contraseña <b>demo</b>. Solo verás las citas hechas en este navegador. Al conectar Google Sheets (ver LEEME), el acceso real lo valida tu servidor.</p>
     <form class="login" id="login" hidden>
-      <div class="field"><label for="a-key">Clave de administración</label><input id="a-key" type="password" autocomplete="current-password"><div class="msg" id="a-err" role="alert"></div></div>
-      <button class="btn" type="submit">Entrar</button>
+      <h3>Iniciar sesión</h3>
+      <div class="field"><label for="a-user">Usuario</label><input id="a-user" type="text" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
+      <div class="field"><label for="a-pass">Contraseña</label><input id="a-pass" type="password" autocomplete="current-password"><div class="msg" id="a-err" role="alert"></div></div>
+      <button class="btn" type="submit" id="a-enter">Entrar</button>
     </form>
     <div id="panel" hidden>
       <div class="stats" id="stats"></div>
-      <div class="toolbar">
-        <div class="field"><label for="a-q">Buscar</label><input id="a-q" type="search" placeholder="Nombre, correo o teléfono"></div>
-        <div class="field"><label for="a-mod">Modalidad</label><select id="a-mod"><option value="">Todas</option><option value="presencial">Presencial</option><option value="virtual">Virtual</option></select></div>
-        <div class="field"><label for="a-est">Estado</label><select id="a-est"><option value="">Todos</option><option value="nuevo">Nuevo</option><option value="contactado">Contactado</option><option value="confirmada">Confirmada</option><option value="cancelada">Cancelada</option></select></div>
-        <div class="field"><label for="a-ord">Orden</label><select id="a-ord"><option value="rec">Más recientes</option><option value="cita">Fecha de cita</option></select></div>
+      <div class="tabs" role="tablist" aria-label="Vista">
+        <button type="button" role="tab" id="tab-cal" aria-selected="true" aria-controls="view-cal">Calendario</button>
+        <button type="button" role="tab" id="tab-list" aria-selected="false" aria-controls="view-list">Lista</button>
+      </div>
+      <div id="view-cal" role="tabpanel" aria-labelledby="tab-cal">
+        <div class="calwrap">
+          <div class="admcal">
+            <div class="calhead">
+              <button class="nav" type="button" id="a-prev" aria-label="Mes anterior">&#8249;</button>
+              <strong id="a-month" aria-live="polite"></strong>
+              <button class="nav" type="button" id="a-next" aria-label="Mes siguiente">&#8250;</button>
+            </div>
+            <div class="dow" aria-hidden="true"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+            <div class="acells" id="a-cells"></div>
+            <p class="hint legend"><span class="dot"></span> Día con citas. El número indica cuántas hay.</p>
+          </div>
+          <div class="dayview" id="dayview" aria-live="polite"></div>
+        </div>
+      </div>
+      <div id="view-list" role="tabpanel" aria-labelledby="tab-list" hidden>
+        <div class="toolbar">
+          <div class="field"><label for="a-q">Buscar</label><input id="a-q" type="search" placeholder="Nombre, correo o teléfono"></div>
+          <div class="field"><label for="a-mod">Modalidad</label><select id="a-mod"><option value="">Todas</option><option value="presencial">Presencial</option><option value="virtual">Virtual</option></select></div>
+          <div class="field"><label for="a-est">Estado</label><select id="a-est"><option value="">Todos</option><option value="nuevo">Nuevo</option><option value="contactado">Contactado</option><option value="confirmada">Confirmada</option><option value="cancelada">Cancelada</option></select></div>
+          <div class="field"><label for="a-ord">Orden</label><select id="a-ord"><option value="rec">Más recientes</option><option value="cita">Fecha de cita</option></select></div>
+        </div>
+        <div class="rechead" aria-hidden="true"><span>Paciente</span><span>Contacto</span><span>Cita</span><span>Estado</span></div>
+        <div class="list" id="list"></div>
+        <p class="hint" id="a-count"></p>
       </div>
       <div class="toolrow">
         <button class="btn ghost sm" type="button" id="a-refresh">Actualizar</button>
@@ -36,9 +65,6 @@
         <button class="btn ghost sm" type="button" id="a-clear" hidden>Borrar datos de prueba</button>
         <span class="hint" id="a-msg" role="status"></span>
       </div>
-      <div class="rechead" aria-hidden="true"><span>Paciente</span><span>Contacto</span><span>Cita</span><span>Estado</span></div>
-      <div class="list" id="list"></div>
-      <p class="hint" id="a-count"></p>
     </div>
   </div>
 </section>

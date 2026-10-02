@@ -13,21 +13,26 @@ QUÉ FUNCIONA SIN CONFIGURAR (modo demo)
 PARA RECIBIR REGISTROS REALES (Google Sheets, gratis)
   1. Crea una hoja de cálculo nueva en Google Sheets con la cuenta de la clínica.
   2. Extensiones > Apps Script. Borra lo que haya y pega el contenido de apps-script-Code.gs.
-  3. En la primera línea cambia ADMIN_KEY por una clave privada (opcional: pon un correo en NOTIFY_EMAIL).
+  3. Cambia ADMIN_PASS por la contraseña de administración (ADMIN_USER es el usuario). Escríbela SOLO dentro del editor
+     de Apps Script, nunca en archivos que subas a GitHub, porque ese repositorio es público. Opcional: correo en NOTIFY_EMAIL.
   4. Implementar > Nueva implementación > tipo "Aplicación web".
      Ejecutar como: Yo.   Quién tiene acceso: Cualquier persona.   Autoriza los permisos que pida.
   5. Copia la URL que termina en /exec y pégala en config.js, en sheetUrl.
   6. Sube los archivos a GitHub de nuevo. Listo:
      - Las solicitudes llegan a la hoja "Registros".
      - Las horas ya reservadas desaparecen del calendario para los demás.
-     - admin.html pide la clave y muestra todos los registros, con filtros y estado.
+     - admin.html pide usuario y contraseña (los valida tu script de Google) y muestra un calendario con las citas
+       ocupadas, la lista con filtros y un botón para confirmar cada cita por WhatsApp con mensaje ya escrito.
 
 NOTAS
   - Si ya habías creado la hoja con una versión anterior, borra la pestaña "Registros" para que se cree con las columnas nuevas (modalidad y comentarios).
   - Horarios de config.js son de ejemplo (lunes a viernes, 8:00-12:00 y 13:00-17:00). Ajústalos.
   - admin.html no está enlazado en el menú, pero sí en el pie de página como "Acceso clínica".
-    La protección real es la clave en el servidor, no la página.
-  - La clave se envía en la dirección de consulta; úsala solo para este fin y cámbiala si se filtra.
+    La protección real es el usuario y contraseña que valida el servidor, no la página.
+  - Modo demo (sin sheetUrl): el acceso de prueba es usuario Admin y contraseña demo. La contraseña real nunca va en estos archivos.
+  - Tras 5 intentos fallidos el acceso se bloquea 15 minutos. La sesión dura 6 horas.
+  - Mapa: index.html incluye un mapa de Google por dirección. Si el pin no queda exacto, abre el lugar en Google Maps >
+    Compartir > Insertar un mapa, copia el src del iframe y reemplázalo en index.html.
   - Las tipografías (Outfit, Figtree) se cargan desde Google Fonts, requiere internet.
 
 Made by Merla Analytics.
